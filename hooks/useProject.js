@@ -1,7 +1,8 @@
 import react, { useState, useEffect } from "react";
 import axios from "axios";
 export default function useUser() {
-  const [projects, setProjects] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [singleProject, setSingleProject] = useState([]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -12,9 +13,21 @@ export default function useUser() {
     };
 
     fetchProjects();
-  }, []);
+  }, [projects]);
+
+  // const handleProjectId = (id) => {
+  //   setProjectId(id);
+  // };
+
+  const handleFilter = (arr, id) => {
+    const record = arr.filter((item) => item.projectId === id);
+    setSingleProject(record);
+    return record;
+  };
 
   return {
     projects,
+    handleFilter,
+    singleProject,
   };
 }

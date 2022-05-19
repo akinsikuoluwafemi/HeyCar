@@ -26,18 +26,20 @@ import axios from "axios";
 import getFullName from "../utils/getFullName";
 import useReports from "../hooks/useReports";
 import { getTotal, getTotalOfAReport } from "../utils/getTotals";
+import FilteredContentWrapper from "../components/FilteredContentWrapper";
+import UnfilteredContentWrapper from "../components/UnfilteredContentWrapper";
+// import { handleFilter } from "../utils/filterRecords";
 
 export default function Home() {
   // states
   const [open, setOpen] = useState(false);
   const [gatewayDropdownOpen, setGatewayDropDownOpen] = useState(false);
+  const [isFiltered, setIsFiltered] = useState(false);
 
   const [tableOpen, setTableOpen] = useState(false);
   const [projectName, setProjectName] = useState("All projects");
-  const [gateWayName, setGateWayName] = useState("Gateway");
+  const [gateWayName, setGateWayName] = useState("All Gateway");
   const [currentIndex, setCurrentIndex] = useState("");
-
-  const [currentId, setCurrentId] = useState("");
 
   const handleClick = (id) => {
     setCurrentIndex(id);
@@ -45,8 +47,9 @@ export default function Home() {
 
   // hooks
   const { user } = useUser();
-  const { projects } = useProject();
-  const { gateways } = useGateway();
+  const { projects, handleFilter, singleProject } = useProject();
+  const { gateways, handleGatewayFilter, singleGateway } = useGateway();
+  // console.log(gateways);
   const {
     reports,
     handleSetFrom,
@@ -56,6 +59,7 @@ export default function Home() {
   } = useReports();
   // console.log(gateways);
   // console.log(reports);
+  // console.log(projects);
 
   const { firstName, lastName, firstLetterFirstName, firstLetterLastName } =
     getFullName(user);
@@ -64,7 +68,7 @@ export default function Home() {
   // console.log(allTotal);
 
   const totalOfAReport = getTotalOfAReport(reports, "bgYhx");
-  console.log(totalOfAReport);
+  // console.log(totalOfAReport);
 
   return (
     <>
@@ -133,6 +137,8 @@ export default function Home() {
                           onClick={() => {
                             setOpen(!open);
                             setProjectName("All projects");
+                            handleSetProjectId("");
+                            setIsFiltered(false);
                           }}
                         >
                           All projects
@@ -144,7 +150,12 @@ export default function Home() {
                                 onClick={() => {
                                   setOpen(!open);
                                   setProjectName(project.name);
+                                  // handleProjectId(project.projectId);
+                                  handleSetProjectId(project.projectId);
                                   alert(project.projectId);
+
+                                  setIsFiltered(true);
+                                  handleFilter(projects, project.projectId);
                                 }}
                                 key={project.projectId}
                               >
@@ -161,7 +172,9 @@ export default function Home() {
                       &nbsp;
                       <img
                         style={{ cursor: "pointer" }}
-                        onClick={() => setGatewayDropDownOpen(!open)}
+                        onClick={() =>
+                          setGatewayDropDownOpen(!gatewayDropdownOpen)
+                        }
                         src="/polygon.svg"
                         alt="arrow-down-logo"
                       />
@@ -171,7 +184,7 @@ export default function Home() {
                         <span
                           onClick={() => {
                             setGatewayDropDownOpen(!gatewayDropdownOpen);
-                            setGateWayName("All gateways");
+                            setGateWayName("All Gateways");
                           }}
                         >
                           All Gateways
@@ -183,7 +196,7 @@ export default function Home() {
                                 onClick={() => {
                                   setGatewayDropDownOpen(!gatewayDropdownOpen);
                                   setGateWayName(gateway.name);
-                                  console.log(gateway.gatewayId);
+                                  handleSetGatewayId(gateway.gatewayId);
                                 }}
                                 key={gateway.gatewayId}
                               >
@@ -222,60 +235,31 @@ export default function Home() {
                   </ButtonWrapper>
                 </div>
               </ContentHeader>
-              <MainContentWrapper showChart={false}>
-                <p>All Projects | All gateways</p>
-
-                {projects &&
-                  projects.map((project, index) => (
-                    <div key={project.projectId}>
-                      <MainContent
-                        onClick={() => {
-                          handleClick(index);
-                          setTableOpen((prev) => !prev);
-                        }}
-                      >
-                        <span className="">{project.name}</span>
-                        <span className="">
-                          Total: {getTotalOfAReport(reports, project.projectId)}{" "}
-                          {/* ?{getTotalOfAReport(reports, project.projectId)} : 0 */}
-                          USD
-                        </span>
-                      </MainContent>
-                      {/*  */}
-                      {tableOpen && (
-                        <table
-                          className={currentIndex === index ? "open" : "close"}
-                        >
-                          <thead className="main-content-th">
-                            <th>Date</th>
-                            <th style={{ marginLeft: "5rem" }}>Gateway</th>
-                            <th>Transaction ID</th>
-                            <th>Amount</th>
-                          </thead>
-
-                          {reports &&
-                            reports.map((report, i) => (
-                              <>
-                                <tr className="main-content-body">
-                                  <td>{report.created}</td>
-                                  <td
-                                    className="gateway-head"
-                                    style={{ textAlign: "center" }}
-                                  >
-                                    Gateway {i + 1}
-                                  </td>
-                                  <td>{report.paymentId.slice(0, 4)}</td>
-                                  <td>{Math.round(report.amount)}</td>
-                                </tr>
-                              </>
-                            ))}
-                        </table>
-                      )}
-                    </div>
-                  ))}
-
-                {/*  */}
-              </MainContentWrapper>
+              {/*  */}
+              {isFiltered ? (
+                <FilteredContentWrapper
+                  projectName={projectName}
+                  gateWayName={gateWayName}
+                  singleProject={singleProject}
+                  reports={reports}
+                  tableOpen={tableOpen}
+                  handleClick={handleClick}
+                  currentIndex={currentIndex}
+                  setTableOpen={setTableOpen}
+                />
+              ) : (
+                <UnfilteredContentWrapper
+                  projectName={projectName}
+                  gateWayName={gateWayName}
+                  projects={projects}
+                  reports={reports}
+                  tableOpen={tableOpen}
+                  handleClick={handleClick}
+                  currentIndex={currentIndex}
+                  setTableOpen={setTableOpen}
+                />
+              )}
+              {/*  */}
               <MainContentFooter>
                 Total: <span>{allTotal && allTotal} USD</span>
               </MainContentFooter>

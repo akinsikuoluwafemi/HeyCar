@@ -1,7 +1,8 @@
 import react, { useState, useEffect } from "react";
 import axios from "axios";
 export default function useUser() {
-  const [gateways, setGateways] = useState(null);
+  const [gateways, setGateways] = useState([]);
+  const [singleGateway, setSingleGateway] = useState([]);
 
   useEffect(() => {
     const fetchGateway = async () => {
@@ -12,9 +13,18 @@ export default function useUser() {
     };
 
     fetchGateway();
-  }, []);
+  }, [gateways]);
+
+  const handleGatewayFilter = (arr, id) => {
+    const record = arr.filter((item) => item.projectId === id);
+    setSingleGateway(record);
+    alert(JSON.stringify(record));
+    return record;
+  };
 
   return {
     gateways,
+    handleGatewayFilter,
+    singleGateway,
   };
 }

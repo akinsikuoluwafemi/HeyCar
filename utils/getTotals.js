@@ -6,7 +6,6 @@ export function getTotal(arr) {
 
 export function getTotalOfAReport(arr, id) {
   const report = arr.filter((item) => item.projectId === id);
-  console.log(report.length);
   return (
     report &&
     report.reduce((acc, curr) => {
