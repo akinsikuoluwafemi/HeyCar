@@ -1,11 +1,12 @@
+import { ProjectProvider } from "../context/projectContext";
 import "../styles/globals.css";
 import { Globalstyle } from "../utils/Global";
 
 function MyApp({ Component, pageProps }) {
   return (
-    // <>
-    <Component {...pageProps} />
-    // </>
+    <ProjectProvider>
+      <Component {...pageProps} />
+    </ProjectProvider>
   );
 }
 

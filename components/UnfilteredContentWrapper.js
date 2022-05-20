@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { numberWithCommas } from "../utils/getCommas";
 import { getTotalOfAReport } from "../utils/getTotals";
 import { MainContent, MainContentWrapper } from "./HomePageStyles";
 
@@ -11,9 +12,9 @@ export default function UnfilteredContentWrapper({
   handleClick,
   currentIndex,
   setTableOpen,
+  singleGateway,
+  isGatewayFiltered,
 }) {
-  const [isFiltered, setIsFiltered] = useState(false);
-
   // console.log(reports);
 
   return (
@@ -33,9 +34,11 @@ export default function UnfilteredContentWrapper({
             >
               <span className="">{project.name}</span>
               <span className="">
-                Total: {getTotalOfAReport(reports, project.projectId)}{" "}
-                {/* ?{getTotalOfAReport(reports, project.projectId)} : 0 */}
-                USD
+                Total:
+                {numberWithCommas(
+                  getTotalOfAReport(reports, project.projectId)
+                )}{" "}
+                USD{" "}
               </span>
             </MainContent>
             {/*  */}
@@ -48,7 +51,7 @@ export default function UnfilteredContentWrapper({
                   <th>Amount</th>
                 </thead>
 
-                {reports &&
+                {/* {reports &&
                   reports.map((report, i) => (
                     <>
                       <tr className="main-content-body">
@@ -60,10 +63,59 @@ export default function UnfilteredContentWrapper({
                           Gateway {i + 1}
                         </td>
                         <td>{report.paymentId.slice(0, 4)}</td>
-                        <td>{Math.round(report.amount)}</td>
+                        <td>
+                          {numberWithCommas(Math.round(report.amount))} USD
+                        </td>
                       </tr>
                     </>
-                  ))}
+                  ))} */}
+                {/* isGatewayFiltered && singlegateway.length is === 0 */}
+                {isGatewayFiltered ? (
+                  <>
+                    {singleGateway &&
+                      singleGateway.map((report, i) => (
+                        <>
+                          <tr className="main-content-body">
+                            <td>
+                              {report.created}
+                              {singleGateway.length}
+                            </td>
+                            <td
+                              className="gateway-head"
+                              style={{ textAlign: "center" }}
+                            >
+                              Gateway {i + 1}
+                            </td>
+                            <td>{report.paymentId.slice(0, 4)}</td>
+                            <td>
+                              {numberWithCommas(Math.round(report.amount))} USD
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                  </>
+                ) : (
+                  <>
+                    {reports &&
+                      reports.map((report, i) => (
+                        <>
+                          <tr className="main-content-body">
+                            <td>{report.created}</td>
+                            <td
+                              className="gateway-head"
+                              style={{ textAlign: "center" }}
+                            >
+                              Gateway {i + 1}
+                            </td>
+                            <td>{report.paymentId.slice(0, 4)}</td>
+                            <td>
+                              {numberWithCommas(Math.round(report.amount))} USD
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                  </>
+                )}
               </table>
             )}
           </div>

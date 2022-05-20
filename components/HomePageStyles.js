@@ -14,8 +14,7 @@ export const HomePageHeader = styled.div`
   // padding: 1rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  padding-right: 2rem;
-  padding-right: 2rem;
+  padding-right: 5rem;
   border-bottom: 1px solid #f3f6f9;
   // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -76,6 +75,13 @@ export const MainWrapper = styled.div`
     // background: teal;
     // padding: 1rem;
   }
+
+  & > .down-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: red;
+  }
 `;
 
 export const ContentHeader = styled.div`
@@ -104,13 +110,14 @@ export const ContentHeader = styled.div`
     padding: 1rem;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
   }
 `;
 
 export const MainContentWrapper = styled.div`
   background: #f1fafe;
-  // background: red;
+  margin-bottom: calc(60vh - 10%); /* relative to the nearest block container's width */
+
   padding: 1rem;
   margin-right: 3rem;
 
@@ -136,6 +143,8 @@ export const MainContentWrapper = styled.div`
 
   & > table {
     width: 100%;
+    overflow-x: scroll;
+    height: 500px;
     & > .main-content-th {
       display: flex;
 
@@ -194,7 +203,7 @@ export const MainContentFooter = styled.div`
   // background: red;
   padding: 1rem;
   margin-right: 4rem;
-  width: 100%;
+  width: 97.5%;
 
   border-radius: 0.5rem;
   font-size: 1.1rem;

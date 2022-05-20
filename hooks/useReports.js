@@ -4,8 +4,8 @@ import axios from "axios";
 export default function useReports() {
   const [from, setFrom] = useState("2021-01-01");
   const [to, setTo] = useState("2021-12-31");
-  const [projectId, setProjectId] = useState("bgYhx");
-  const [gatewayId, setGatewayId] = useState("i6ssp");
+  const [projectId, setProjectId] = useState("");
+  const [gatewayId, setGatewayId] = useState("");
   const [reports, setReports] = useState([]);
 
   const handleSetFrom = (startdate) => {

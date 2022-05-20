@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { numberWithCommas } from "../utils/getCommas";
 import { getTotalOfAReport } from "../utils/getTotals";
 import { MainContent, MainContentWrapper } from "./HomePageStyles";
 
@@ -11,9 +12,9 @@ export default function FilteredContentWrapper({
   handleClick,
   currentIndex,
   setTableOpen,
+  singleGateway,
+  isGatewayFiltered,
 }) {
-  const [isFiltered, setIsFiltered] = useState(false);
-
   return (
     <MainContentWrapper showChart={false}>
       <p>
@@ -31,8 +32,10 @@ export default function FilteredContentWrapper({
             >
               <span className="">{project.name}</span>
               <span className="">
-                Total: {getTotalOfAReport(reports, project.projectId)}{" "}
-                {/* ?{getTotalOfAReport(reports, project.projectId)} : 0 */}
+                Total:{" "}
+                {numberWithCommas(
+                  getTotalOfAReport(reports, project.projectId)
+                )}{" "}
                 USD
               </span>
             </MainContent>
@@ -46,22 +49,52 @@ export default function FilteredContentWrapper({
                   <th>Amount</th>
                 </thead>
 
-                {reports &&
-                  reports.map((report, i) => (
-                    <>
-                      <tr className="main-content-body">
-                        <td>{report.created}</td>
-                        <td
-                          className="gateway-head"
-                          style={{ textAlign: "center" }}
-                        >
-                          Gateway {i + 1}
-                        </td>
-                        <td>{report.paymentId.slice(0, 4)}</td>
-                        <td>{Math.round(report.amount)}</td>
-                      </tr>
-                    </>
-                  ))}
+                {isGatewayFiltered ? (
+                  <>
+                    {singleGateway &&
+                      singleGateway.map((report, i) => (
+                        <>
+                          <tr className="main-content-body">
+                            <td>
+                              {report.created}
+                              {singleGateway.length}
+                            </td>
+                            <td
+                              className="gateway-head"
+                              style={{ textAlign: "center" }}
+                            >
+                              Gateway {i + 1}
+                            </td>
+                            <td>{report.paymentId.slice(0, 4)}</td>
+                            <td>
+                              {numberWithCommas(Math.round(report.amount))} USD
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                  </>
+                ) : (
+                  <>
+                    {reports &&
+                      reports.map((report, i) => (
+                        <>
+                          <tr className="main-content-body">
+                            <td>{report.created}</td>
+                            <td
+                              className="gateway-head"
+                              style={{ textAlign: "center" }}
+                            >
+                              Gateway {i + 1}
+                            </td>
+                            <td>{report.paymentId.slice(0, 4)}</td>
+                            <td>
+                              {numberWithCommas(Math.round(report.amount))} USD
+                            </td>
+                          </tr>
+                        </>
+                      ))}
+                  </>
+                )}
               </table>
             )}
           </div>
