@@ -11,14 +11,14 @@ import {
   MainContent,
   ContentGrid,
   MainContentFooter,
+  NoReportsContainer,
 } from "../components/HomePageStyles";
 import { Globalstyle } from "../utils/Global";
 import { ButtonWrapper, DropDownWrapper } from "../components/ButtonWrapper";
 import react, { useState, useEffect } from "react";
 import "ag-grid-community/dist/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/dist/styles/ag-theme-alpine.css"; // Optional theme CSS
-import { DatePicker, Space } from "antd";
-import axios from "axios";
+import { DatePicker } from "antd";
 import moment from "moment";
 
 import useUser from "../hooks/useUser";
@@ -32,6 +32,7 @@ import FilteredContentWrapper from "../components/FilteredContentWrapper";
 import UnfilteredContentWrapper from "../components/UnfilteredContentWrapper";
 import { numberWithCommas } from "../utils/getCommas";
 import useProjects, { ProjectProvider } from "../context/projectContext";
+import ChartWrapper from "../components/ChartWrapper";
 // import { handleFilter } from "../utils/filterRecords";
 
 export default function Home() {
@@ -44,6 +45,7 @@ export default function Home() {
   const [projectName, setProjectName] = useState("Select Project");
   const [gateWayName, setGateWayName] = useState("Select Gateway");
   const [currentIndex, setCurrentIndex] = useState("");
+  const [showChart, setShowChart] = useState(false);
 
   const handleClick = (id) => {
     setCurrentIndex(id);
@@ -51,18 +53,9 @@ export default function Home() {
 
   // hooks
   const { user } = useUser();
-  const { projects, handleFilter, singleProject } = useProject();
+  const { projects, fetchProjects, handleFilter, singleProject } = useProject();
   const { gateways, handleGatewayFilter, singleGateway } = useGateway();
-
-  const { allProjects, setAllProjects } = useProjects();
-
-  const filterResult = (id) => {
-    const result = projects && projects.filter((item) => item.projectId === id);
-    setAllProjects(result);
-  };
-
-  // console.log(gateways);
-
+  // console.log(projects);
   // i6ssp;
   // GzFF8
   const {
@@ -93,13 +86,6 @@ export default function Home() {
     getFullName(user);
 
   const allTotal = getTotal(reports);
-
-  // console.log(allTotal);
-
-  // const totalOfAReport = getTotalOfAReport(reports, "bgYhx");
-  // console.log(totalOfAReport);
-
-  // const aGateway = handleGatewayFilter(reports, "");
 
   return (
     <>
@@ -169,7 +155,10 @@ export default function Home() {
                             setOpen(!open);
                             setProjectName("All projects");
                             handleSetProjectId("");
+                            setGateWayName(gateWayName);
+
                             setIsFiltered(false);
+                            fetchProjects();
                           }}
                         >
                           All projects
@@ -183,12 +172,11 @@ export default function Home() {
                                   setProjectName(project.name);
                                   // handleProjectId(project.projectId);
                                   handleSetProjectId(project.projectId);
-                                  alert(project.projectId);
 
                                   setIsFiltered(true);
                                   handleFilter(projects, project.projectId);
 
-                                  filterResult(project.projectId);
+                                  // filterResult(project.projectId);
                                 }}
                                 key={project.projectId}
                               >
@@ -238,7 +226,6 @@ export default function Home() {
                                     reports,
                                     gateway.gatewayId
                                   );
-                                  alert(gateway.gatewayId);
                                 }}
                                 key={gateway.gatewayId}
                               >
@@ -265,7 +252,7 @@ export default function Home() {
                     //     moment().to(current)
                     //   );
                     // }}
-                    defaultValue={moment("2021-01-01", "YYYY-MM-DD")}
+                    // defaultValue={moment("2021-01-01", "YYYY-MM-DD")}
                     onChange={onFromDateChange}
                   />
 
@@ -278,7 +265,7 @@ export default function Home() {
                       color: "white",
                     }}
                     placeholder="To date"
-                    defaultValue={moment("2021-12-01", "YYYY-MM-DD")}
+                    // defaultValue={moment("2021-12-01", "YYYY-MM-DD")}
                     // disabledDate={(current) => {
                     //   return (
                     //     moment().from(moment("2020-01-01")) > current && current
@@ -286,7 +273,16 @@ export default function Home() {
                     // }}
                     onChange={onToDateChange}
                   />
-                  <ButtonWrapper bggenerate>
+                  <ButtonWrapper
+                    style={{
+                      pointerEvents:
+                        projects && projects.length > 0 ? "all" : "none",
+                    }}
+                    bggenerate={true}
+                    onClick={() => {
+                      setShowChart(!showChart);
+                    }}
+                  >
                     <div className="btn-arr-wrapper">
                       <span className="btn-text">Generate report</span> &nbsp;
                       &nbsp;
@@ -295,43 +291,87 @@ export default function Home() {
                 </div>
               </ContentHeader>
               {/*  */}
-              {isFiltered ? (
-                <FilteredContentWrapper
-                  projectName={projectName}
-                  gateWayName={gateWayName}
-                  singleProject={singleProject}
-                  singleGateway={singleGateway}
-                  reports={reports}
-                  tableOpen={tableOpen}
-                  handleClick={handleClick}
-                  currentIndex={currentIndex}
-                  setTableOpen={setTableOpen}
-                  isGatewayFiltered={isGatewayFiltered}
-                  setIsGatewayFiltered={setIsGatewayFiltered}
-                />
+
+              {projects && projects.length > 0 ? (
+                <div style={{ position: "relative" }}>
+                  {isFiltered ? (
+                    <FilteredContentWrapper
+                      showChart={showChart}
+                      projectName={projectName}
+                      gateWayName={gateWayName}
+                      singleProject={singleProject}
+                      singleGateway={singleGateway}
+                      reports={reports}
+                      tableOpen={tableOpen}
+                      handleClick={handleClick}
+                      currentIndex={currentIndex}
+                      setTableOpen={setTableOpen}
+                      isGatewayFiltered={isGatewayFiltered}
+                      setIsGatewayFiltered={setIsGatewayFiltered}
+                    />
+                  ) : (
+                    <UnfilteredContentWrapper
+                      showChart={showChart}
+                      projectName={projectName}
+                      gateWayName={gateWayName}
+                      singleGateway={singleGateway}
+                      projects={projects}
+                      reports={reports}
+                      tableOpen={tableOpen}
+                      handleClick={handleClick}
+                      currentIndex={currentIndex}
+                      setTableOpen={setTableOpen}
+                      isGatewayFiltered={isGatewayFiltered}
+                      setIsGatewayFiltered={setIsGatewayFiltered}
+                    />
+                  )}
+                  {showChart && (
+                    <ChartWrapper projects={projects} reports={reports} />
+                  )}
+                </div>
               ) : (
-                <UnfilteredContentWrapper
-                  projectName={projectName}
-                  gateWayName={gateWayName}
-                  singleGateway={singleGateway}
-                  projects={projects}
-                  reports={reports}
-                  tableOpen={tableOpen}
-                  handleClick={handleClick}
-                  currentIndex={currentIndex}
-                  setTableOpen={setTableOpen}
-                  isGatewayFiltered={isGatewayFiltered}
-                  setIsGatewayFiltered={setIsGatewayFiltered}
-                />
+                <NoReportsContainer>
+                  <h1>No reports</h1>
+                  <p style={{ color: "#7E8299;" }}>
+                    Currently you have no data for the reports to be generated.
+                    Once you start generating traffic through the Balance
+                    application the reports will be shown.
+                  </p>
+                  <img src="/no-reports.svg" alt="no reports image" />
+                </NoReportsContainer>
               )}
+
               {/*  */}
 
-              <MainContentFooter>
-                Total: <span>{allTotal && numberWithCommas(allTotal)} USD</span>
-              </MainContentFooter>
-              <div style={{ padding: "1rem" }} className="policy">
-                Terms&Conditions | Privacy policy
+              {/* footer */}
+              <div
+                style={{
+                  // background: "red",
+                  zIndex: "-3",
+                  position: "fixed",
+                  bottom: "0",
+                  width: "89%",
+                }}
+              >
+                {projects && projects.length > 0 && (
+                  <MainContentFooter>
+                    Total:{" "}
+                    <span>{allTotal && numberWithCommas(allTotal)} USD</span>
+                  </MainContentFooter>
+                )}
+
+                <div
+                  style={{
+                    padding: "1rem",
+                    color: "#005B96",
+                    fontWeight: "bold",
+                  }}
+                  className="policy"
+                >
+                  Terms&Conditions | Privacy policy
+                </div>
               </div>
+              {/*  */}
             </div>
           </MainWrapper>
         </HomePageContainer>

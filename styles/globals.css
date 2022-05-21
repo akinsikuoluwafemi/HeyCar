@@ -15,3 +15,21 @@ a {
 * {
   box-sizing: border-box;
 }
+
+
+.ant-picker-input>input {
+  color: #fff;
+}
+
+.ant-picker-input>input::placeholder {
+  color: #fff!important;
+}
+
+.anticon svg {
+  fill: #fff;
+}
+
+.ant-picker-input:hover > .anticon .anticon-calendar {
+  background: transparent;
+}
+

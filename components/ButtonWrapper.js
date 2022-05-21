@@ -9,6 +9,7 @@ export const ButtonWrapper = styled.div`
   border-radius: 0.5rem;
   gap: 1rem;
   color: white;
+  cursor: pointer;
 
   & > .dropdown-content {
     padding: 0.9rem;

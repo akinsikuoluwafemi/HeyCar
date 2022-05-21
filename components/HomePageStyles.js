@@ -116,7 +116,7 @@ export const ContentHeader = styled.div`
 
 export const MainContentWrapper = styled.div`
   background: #f1fafe;
-  margin-bottom: calc(60vh - 10%); /* relative to the nearest block container's width */
+  // background: red;
 
   padding: 1rem;
   margin-right: 3rem;
@@ -203,10 +203,20 @@ export const MainContentFooter = styled.div`
   // background: red;
   padding: 1rem;
   margin-right: 4rem;
-  width: 97.5%;
 
   border-radius: 0.5rem;
   font-size: 1.1rem;
   font-weight: bold;
   margin-top: 2rem;
+  width: 97%;
+
+}
+
+`;
+
+export const NoReportsContainer = styled.div`
+  margin: 5rem auto;
+  text-align: center;
+  width: 30%;
+  font-weight: bold;
 `;

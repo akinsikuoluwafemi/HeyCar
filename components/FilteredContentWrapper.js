@@ -14,9 +14,10 @@ export default function FilteredContentWrapper({
   setTableOpen,
   singleGateway,
   isGatewayFiltered,
+  showChart,
 }) {
   return (
-    <MainContentWrapper showChart={false}>
+    <MainContentWrapper showChart={showChart}>
       <p>
         {projectName} | {gateWayName}
       </p>

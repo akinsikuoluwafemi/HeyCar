@@ -14,11 +14,13 @@ export default function UnfilteredContentWrapper({
   setTableOpen,
   singleGateway,
   isGatewayFiltered,
+  showChart,
 }) {
   // console.log(reports);
+  // console.log(showChart);
 
   return (
-    <MainContentWrapper showChart={false}>
+    <MainContentWrapper showChart={showChart}>
       <p>
         {/* All Projects | All gateways */}
         {projectName} | {gateWayName}

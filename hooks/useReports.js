@@ -14,16 +14,16 @@ export default function useReports() {
   };
   const handleTo = (enddate) => {
     setTo(enddate);
-    console.log(enddate);
+    // console.log(enddate);
   };
 
   const handleSetProjectId = (id = "") => {
     setProjectId(id);
-    console.log(id);
+    // console.log(id);
   };
   const handleSetGatewayId = (id = "") => {
     setGatewayId(id);
-    console.log(id);
+    // console.log(id);
   };
 
   useEffect(() => {
