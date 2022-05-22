@@ -29,6 +29,7 @@ export default function UnfilteredContentWrapper({
         projects.map((project, index) => (
           <div key={project.projectId}>
             <MainContent
+              role="button"
               onClick={() => {
                 handleClick(index);
                 setTableOpen((prev) => !prev);
@@ -45,7 +46,10 @@ export default function UnfilteredContentWrapper({
             </MainContent>
             {/*  */}
             {tableOpen && (
-              <table className={currentIndex === index ? "open" : "close"}>
+              <table
+                role="table"
+                className={currentIndex === index ? "open" : "close"}
+              >
                 <thead className="main-content-th">
                   <th>Date</th>
                   <th style={{ marginLeft: "5rem" }}>Gateway</th>

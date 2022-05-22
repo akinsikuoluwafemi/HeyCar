@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const ChartContainer = styled.div`
   width: 50%;
-  height: 100%;
+  height: 250px;
   // background: red;
   position: absolute;
   right: 0;
@@ -12,11 +12,13 @@ export const ChartContainer = styled.div`
 
 export const ChartLegend = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({ start }) => (start ? "flex-start" : "space-between")};
   align-items: center;
   background: #f1fafe;
   border-radius: 10px;
   padding: 1.5rem;
+  font-weight: ${({ start }) => (start ? "bold" : "normal")};
+  text-transform: ${({ start }) => (start ? "uppercase" : "capitalize")};
 `;
 
 export const ChartLegendItem = styled.div`

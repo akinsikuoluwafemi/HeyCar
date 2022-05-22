@@ -207,7 +207,6 @@ export const MainContentFooter = styled.div`
   border-radius: 0.5rem;
   font-size: 1.1rem;
   font-weight: bold;
-  margin-top: 2rem;
   width: 97%;
 
 }

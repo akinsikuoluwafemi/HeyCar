@@ -1,23 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from "next/head";
-import Image from "next/image";
 import {
   ContentHeader,
   HomePageContainer,
   HomePageHeader,
   MainWrapper,
   UserIcon,
-  MainContentWrapper,
-  MainContent,
-  ContentGrid,
   MainContentFooter,
   NoReportsContainer,
 } from "../components/HomePageStyles";
 import { Globalstyle } from "../utils/Global";
 import { ButtonWrapper, DropDownWrapper } from "../components/ButtonWrapper";
 import react, { useState, useEffect } from "react";
-import "ag-grid-community/dist/styles/ag-grid.css"; // Core grid CSS, always needed
-import "ag-grid-community/dist/styles/ag-theme-alpine.css"; // Optional theme CSS
 import { DatePicker } from "antd";
 import moment from "moment";
 
@@ -31,7 +25,6 @@ import { getTotal, getTotalOfAReport } from "../utils/getTotals";
 import FilteredContentWrapper from "../components/FilteredContentWrapper";
 import UnfilteredContentWrapper from "../components/UnfilteredContentWrapper";
 import { numberWithCommas } from "../utils/getCommas";
-import useProjects, { ProjectProvider } from "../context/projectContext";
 import ChartWrapper from "../components/ChartWrapper";
 // import { handleFilter } from "../utils/filterRecords";
 
@@ -55,9 +48,7 @@ export default function Home() {
   const { user } = useUser();
   const { projects, fetchProjects, handleFilter, singleProject } = useProject();
   const { gateways, handleGatewayFilter, singleGateway } = useGateway();
-  // console.log(projects);
-  // i6ssp;
-  // GzFF8
+
   const {
     reports,
     handleSetFrom,
@@ -65,12 +56,6 @@ export default function Home() {
     handleSetProjectId,
     handleSetGatewayId,
   } = useReports();
-  // console.log(gateways);
-  // console.log(reports);
-  // console.log(projects);
-
-  // const aGateway = handleGatewayFilter(reports, "i6ssp");
-  // console.log(aGateway);
 
   function onFromDateChange(date, dateString) {
     // console.log(date, dateString);
@@ -94,13 +79,6 @@ export default function Home() {
           <title>Hey Car Reports</title>
           <meta name="description" content="Reports of projects and gateways" />
           <link rel="icon" href="/favicon.ico" />
-
-          <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
-            integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-            crossOrigin="anonymous"
-          />
         </Head>
 
         <HomePageContainer>
@@ -142,14 +120,20 @@ export default function Home() {
                       <span className="btn-text">{projectName}</span> &nbsp;
                       &nbsp;
                       <img
+                        role="button"
                         style={{ cursor: "pointer" }}
                         onClick={() => setOpen(!open)}
                         src="/polygon.svg"
                         alt="arrow-down-logo"
+                        name="arrow-down-logo"
                       />
                     </div>
                     {open && (
-                      <div className="dropdown-content">
+                      <div
+                        role="option"
+                        aria-selected="false"
+                        className="dropdown-content"
+                      >
                         <span
                           onClick={() => {
                             setOpen(!open);
@@ -246,6 +230,7 @@ export default function Home() {
                       color: "white",
                     }}
                     placeholder="From date"
+                    name="From date"
                     // disabledDate={(current) => {
                     //   return (
                     //     moment().from(moment("2020-01-01")) <
@@ -265,6 +250,7 @@ export default function Home() {
                       color: "white",
                     }}
                     placeholder="To date"
+                    name="To date"
                     // defaultValue={moment("2021-12-01", "YYYY-MM-DD")}
                     // disabledDate={(current) => {
                     //   return (
@@ -293,7 +279,10 @@ export default function Home() {
               {/*  */}
 
               {projects && projects.length > 0 ? (
-                <div style={{ position: "relative" }}>
+                <div
+                  data-testid="project-list"
+                  style={{ position: "relative" }}
+                >
                   {isFiltered ? (
                     <FilteredContentWrapper
                       showChart={showChart}
@@ -326,7 +315,11 @@ export default function Home() {
                     />
                   )}
                   {showChart && (
-                    <ChartWrapper projects={projects} reports={reports} />
+                    <ChartWrapper
+                      projects={projects}
+                      reports={reports}
+                      isFiltered={isFiltered}
+                    />
                   )}
                 </div>
               ) : (
@@ -353,11 +346,17 @@ export default function Home() {
                   width: "89%",
                 }}
               >
-                {projects && projects.length > 0 && (
-                  <MainContentFooter>
-                    Total:{" "}
-                    <span>{allTotal && numberWithCommas(allTotal)} USD</span>
-                  </MainContentFooter>
+                {!showChart && (
+                  <>
+                    {projects && projects.length > 0 && (
+                      <MainContentFooter>
+                        Total:{" "}
+                        <span>
+                          {allTotal && numberWithCommas(allTotal)} USD
+                        </span>
+                      </MainContentFooter>
+                    )}
+                  </>
                 )}
 
                 <div

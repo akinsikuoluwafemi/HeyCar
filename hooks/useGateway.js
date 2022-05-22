@@ -18,9 +18,7 @@ export default function useUser() {
   const handleGatewayFilter = (arr, id) => {
     const record = arr.filter((item) => item.gatewayId === id);
     setSingleGateway(record);
-    // alert(JSON.stringify(record));
-    // JSON.stringify(alert(record));
-    // console.log(record);
+
     return record;
   };
 
