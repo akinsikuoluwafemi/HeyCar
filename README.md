@@ -12,6 +12,6 @@ git clone git@github.com:akinsikuoluwafemi/HeyCar.git && cd HeyCar && yarn && ya
 
 ## Testing
 
-Run `bash yarn test` to run the tests.
+Run `yarn test` to run the tests.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
