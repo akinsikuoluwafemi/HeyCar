@@ -10,4 +10,8 @@ git clone git@github.com:akinsikuoluwafemi/HeyCar.git && cd HeyCar && npm instal
 git clone git@github.com:akinsikuoluwafemi/HeyCar.git && cd HeyCar && yarn && yarn dev
 ```
 
+## Testing
+
+Run `bash yarn test` to run the tests.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
