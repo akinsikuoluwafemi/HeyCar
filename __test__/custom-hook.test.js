@@ -25,6 +25,9 @@ test("exposes the projects, singleProject and handleFilter and fetchProject func
 
   expect(result.singleProject).toEqual([]);
   expect(result.projects).toEqual([]);
+  act(() => {
+    result.handleFilter(arr, 1);
+  });
 
   expect(result.handleFilter(arr, 1)).toBeDefined();
   expect(result.singleProject).toBeDefined();

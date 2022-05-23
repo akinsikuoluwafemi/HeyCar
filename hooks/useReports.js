@@ -1,5 +1,6 @@
 import react, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function useReports() {
   const [from, setFrom] = useState("2021-01-01");
@@ -7,6 +8,9 @@ export default function useReports() {
   const [projectId, setProjectId] = useState("");
   const [gatewayId, setGatewayId] = useState("");
   const [reports, setReports] = useState([]);
+  const [isReportError, setIsReportError] = useState(false);
+
+  const notify = (errorMessage) => toast.error(errorMessage);
 
   const handleSetFrom = (startdate) => {
     setFrom(startdate);
@@ -28,16 +32,23 @@ export default function useReports() {
 
   useEffect(() => {
     const fetchReports = async (from, to, projectId, gatewayId) => {
-      const res = await axios.post(
-        "http://178.63.13.157:8090/mock-api/api/report",
-        {
-          from,
-          to,
-          projectId,
-          gatewayId,
-        }
-      );
-      setReports(res.data.data);
+      try {
+        const res = await axios.post(
+          "http://178.63.13.157:8090/mock-api/api/report",
+          {
+            from,
+            to,
+            projectId,
+            gatewayId,
+          }
+        );
+        setIsReportError(false);
+        setReports(res.data.data);
+      } catch (err) {
+        console.error(err.message);
+        setIsReportError(true);
+        notify();
+      }
     };
     fetchReports(from, to, projectId, gatewayId);
   }, [from, to, projectId, gatewayId]);
@@ -48,5 +59,7 @@ export default function useReports() {
     handleTo,
     handleSetProjectId,
     handleSetGatewayId,
+    isReportError,
+    setIsReportError,
   };
 }

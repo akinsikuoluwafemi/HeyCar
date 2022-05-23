@@ -26,7 +26,7 @@ import FilteredContentWrapper from "../components/FilteredContentWrapper";
 import UnfilteredContentWrapper from "../components/UnfilteredContentWrapper";
 import { numberWithCommas } from "../utils/getCommas";
 import ChartWrapper from "../components/ChartWrapper";
-// import { handleFilter } from "../utils/filterRecords";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Home() {
   // states
@@ -46,8 +46,10 @@ export default function Home() {
 
   // hooks
   const { user } = useUser();
-  const { projects, fetchProjects, handleFilter, singleProject } = useProject();
-  const { gateways, handleGatewayFilter, singleGateway } = useGateway();
+  const { projects, fetchProjects, handleFilter, singleProject, isError } =
+    useProject();
+  const { gateways, handleGatewayFilter, singleGateway, isGatewayError } =
+    useGateway();
 
   const {
     reports,
@@ -55,15 +57,14 @@ export default function Home() {
     handleTo,
     handleSetProjectId,
     handleSetGatewayId,
+    isReportError,
   } = useReports();
 
   function onFromDateChange(date, dateString) {
-    // console.log(date, dateString);
     handleSetFrom(dateString);
   }
 
   function onToDateChange(date, dateString) {
-    // console.log(date, dateString);
     handleTo(dateString);
   }
 
@@ -114,6 +115,16 @@ export default function Home() {
                     Easily generate a report of your transactions
                   </p>
                 </div>
+                {/*  */}
+                {isError ||
+                  isGatewayError ||
+                  (isReportError && (
+                    <div role="alert" className="error-message">
+                      <ToastContainer />
+                    </div>
+                  ))}
+
+                {/*  */}
                 <div className="dropdowns">
                   <ButtonWrapper>
                     <div className="btn-arr-wrapper">
@@ -154,13 +165,10 @@ export default function Home() {
                                 onClick={() => {
                                   setOpen(!open);
                                   setProjectName(project.name);
-                                  // handleProjectId(project.projectId);
                                   handleSetProjectId(project.projectId);
 
                                   setIsFiltered(true);
                                   handleFilter(projects, project.projectId);
-
-                                  // filterResult(project.projectId);
                                 }}
                                 key={project.projectId}
                               >
@@ -231,13 +239,11 @@ export default function Home() {
                     }}
                     placeholder="From date"
                     name="From date"
-                    // disabledDate={(current) => {
-                    //   return (
-                    //     moment().from(moment("2020-01-01")) <
-                    //     moment().to(current)
-                    //   );
-                    // }}
-                    // defaultValue={moment("2021-01-01", "YYYY-MM-DD")}
+                    disabledDate={(current) => {
+                      return (
+                        current && current < moment("2021-01-01", "YYYY-MM-DD")
+                      );
+                    }}
                     onChange={onFromDateChange}
                   />
 
@@ -251,12 +257,11 @@ export default function Home() {
                     }}
                     placeholder="To date"
                     name="To date"
-                    // defaultValue={moment("2021-12-01", "YYYY-MM-DD")}
-                    // disabledDate={(current) => {
-                    //   return (
-                    //     moment().from(moment("2020-01-01")) > current && current
-                    //   );
-                    // }}
+                    disabledDate={(current) => {
+                      return (
+                        current && current > moment("2021-12-31", "YYYY-MM-DD")
+                      );
+                    }}
                     onChange={onToDateChange}
                   />
                   <ButtonWrapper
