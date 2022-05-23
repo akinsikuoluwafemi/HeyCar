@@ -92,6 +92,11 @@ export const ContentHeader = styled.div`
   padding-top: 2rem;
   // background: red;
 
+  @media (max-width: 1000px) {
+    flex-direction: column;
+    // align-items: center;
+  }
+
   & > .content-header-text-wrapper {
     margin: 0;
     padding: 0;
@@ -106,11 +111,14 @@ export const ContentHeader = styled.div`
     z-index: 1000;
     margin-right: 1rem;
     width: 70%;
-    // background: #f3f6f9;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 1000px) {
+      width: 100%;
+    }
   }
 `;
 

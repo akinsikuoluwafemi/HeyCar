@@ -1,3 +1,4 @@
+// add colors and typescale using design systems
 export const yellow = {
   100: "",
   200: "",
