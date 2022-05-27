@@ -32,7 +32,11 @@ export default function UnfilteredContentWrapper({
               role="button"
               onClick={() => {
                 handleClick(index);
-                setTableOpen((prev) => !prev);
+                if (currentIndex !== index) {
+                  setTableOpen(true);
+                } else {
+                  setTableOpen(!tableOpen);
+                }
               }}
             >
               <span className="">{project.name}</span>
