@@ -28,7 +28,11 @@ export default function FilteredContentWrapper({
             <MainContent
               onClick={() => {
                 handleClick(index);
-                setTableOpen((prev) => !prev);
+                if (currentIndex !== index) {
+                  setTableOpen(true);
+                } else {
+                  setTableOpen(!tableOpen);
+                }
               }}
             >
               <span className="">{project.name}</span>

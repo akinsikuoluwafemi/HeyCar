@@ -37,7 +37,7 @@ export default function Home() {
   const [tableOpen, setTableOpen] = useState(false);
   const [projectName, setProjectName] = useState("Select Project");
   const [gateWayName, setGateWayName] = useState("Select Gateway");
-  const [currentIndex, setCurrentIndex] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [showChart, setShowChart] = useState(false);
 
   const handleClick = (id) => {
