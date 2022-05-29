@@ -111,7 +111,7 @@ export default function Home() {
               <ContentHeader>
                 <div className="content-header-text-wrapper">
                   <h2 style={{ margin: "0" }}>Reports</h2>
-                  <p style={{ marginTop: ".6rem" }}>
+                  <p style={{ marginTop: ".6rem", color: "#7e8299" }}>
                     Easily generate a report of your transactions
                   </p>
                 </div>

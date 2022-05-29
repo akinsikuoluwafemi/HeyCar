@@ -101,10 +101,6 @@ export const ContentHeader = styled.div`
     margin: 0;
     padding: 0;
     color: #011f4b;
-    & > p {
-      margin: 0;
-      color: #7e8299;
-    }
   }
 
   & > .dropdowns {

@@ -2,10 +2,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import Home from "../pages/index";
-import FilteredContentWrapper from "../components/FilteredContentWrapper";
-import UnfilteredContentWrapper from "../components/UnfilteredContentWrapper";
 import "@testing-library/jest-dom";
-import { MainContent } from "../components/HomePageStyles";
 import { server } from "../mocks/server";
 
 let user;
